@@ -1,2 +1,3 @@
-# multiflappy.github.io
-Multiplayer Flappy Bird
+# Multi Flappy
+
+Browser based multiplayer flappy bird game
