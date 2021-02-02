@@ -1,5 +1,5 @@
 function run() {
 	var board = document.getElementById("2d");
-	board.fillStyle = "#000000";
+	board.fillStyle = "#FF0000";
 	board.fillRect(0, 0, 150, 75);
 }
