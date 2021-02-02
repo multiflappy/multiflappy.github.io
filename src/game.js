@@ -41,6 +41,13 @@ function printScore() {
 	board.fillText("Score: " + Math.floor(score), boardWidth * 0.4, boardHeight * 0.1);
 }
 
+function reset() {
+	bird = new Bird();
+	pipes = [];
+
+	score = 0;
+}
+
 function run() {
 	drawBoard();
 	bird.move(pipes);
@@ -69,14 +76,22 @@ function run() {
 var pressed = false;
 
 function setKeyCallbacks() {
-	$(document).bind("keydown touchstart", key => {
+	$(document).bind("keydown", key => {
 		if (!pressed && key.keyCode == 32) {
 			bird.jump();
 			pressed = true;
 		}
 	});
 
-	$(document).bind("keyup touchend", key => pressed = false);
+	$(document).bind("touchstart", () => {
+		if (!pressed) {
+			bird.jump();
+			pressed = true;
+		}
+	});
+
+	$(document).bind("keyup", key => pressed = false);
+	$(document).bind("touchend", () => pressed = false);
 }
 
 function main() {
