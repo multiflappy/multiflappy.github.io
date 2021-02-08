@@ -1,3 +1,5 @@
+"use strict";
+
 class Pipe {
 	constructor(boardWidth, boardHeight) {
 		this.posx = boardWidth;
@@ -37,12 +39,6 @@ class Pipe {
 		if (this.posx + this.width < 0) {
 			this.shouldRemove = true;
 		}
-	}
-
-	draw() {
-		board.fillStyle = this.color;
-		board.fillRect(this.posx, this.topPosy, this.width, this.topHeight);
-		board.fillRect(this.posx, this.bottomPosy, this.width, this.bottomHeight);
 	}
 
 	topCollides(bird) {

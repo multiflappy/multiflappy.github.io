@@ -1,91 +1,31 @@
-var canvas = null;
-var board = null;
+"use strict";
 
-var boardWidth = window.innerWidth;
-var boardHeight = window.innerHeight;
+//const audio = new Audio();
 
-var bird = new Bird(boardWidth, boardHeight);
-var pipes = [];
+const jumpAudioFilename = "audio/minecraft.mp3";
+const deathAudioFilename = "audio/akasya_duragi.mp3";
 
-var score = 0;
-
-function getBoard() {
-	canvas = $("#canvas")[0];
-	canvas.width = boardWidth;
-	canvas.height = boardHeight;
-
-	board = canvas.getContext("2d");
-	board.font = "20px Verdana";
+function playAudio(filename) {
+	const audio = new Audio(filename);
+	audio.play();
 }
 
-function drawBoard() {
-	board.clearRect(0, 0, canvas.width, canvas.height);
-	bird.draw();
-	pipes.forEach(pipe => pipe.draw());
-}
-
-function managePipes() {
-	pipes.push(new Pipe(boardWidth, boardHeight));
-
-	pipeLoop = setInterval(() => {
-		pipes.push(new Pipe(boardWidth, boardHeight));
-
-		if (!bird.isAlive) {
-			clearInterval(pipeLoop);
-		}
-	}, 1000);
-}
-
-function printScore() {
-	board.fillStyle = "black";
-	board.fillText("Score: " + Math.floor(score), boardWidth * 0.4, boardHeight * 0.1);
-}
-
-function reset() {
-	bird = new Bird();
-	pipes = [];
-
-	score = 0;
-}
-
-function run() {
-	drawBoard();
-	bird.move(pipes);
-	managePipes();
-	pipes.forEach(pipe => pipe.move());
-
-	gameLoop = setInterval(() => {
-		drawBoard();
-		bird.move(pipes);
-		pipes.forEach(pipe => pipe.move());
-
-		if (pipes.length != 0 && pipes[0].shouldRemove) {
-			pipes.splice(0, 1);
-		}
-
-		if (!bird.isAlive) {
-			clearInterval(gameLoop);
-			alert("You Died");
-		}
-
-		score += 0.1;
-		printScore();
-	}, 1000 / 60);
-}
-
+var playing = true;
 var pressed = false;
 
-function setKeyCallbacks() {
+function setKeyCallbacks(boardData) {
 	$(document).bind("keydown", key => {
-		if (!pressed && key.keyCode == 32) {
-			bird.jump();
+		if (playing && !pressed && key.keyCode == 32) {
+			playAudio(jumpAudioFilename);
+			boardData.bird.jump();
 			pressed = true;
 		}
 	});
 
 	$(document).bind("touchstart", () => {
-		if (!pressed) {
-			bird.jump();
+		if (playing && !pressed) {
+			playAudio(jumpAudioFilename);
+			boardData.bird.jump();
 			pressed = true;
 		}
 	});
@@ -94,10 +34,69 @@ function setKeyCallbacks() {
 	$(document).bind("touchend", () => pressed = false);
 }
 
+function draw(boardData, score) {
+	const board = boardData.board;
+
+	// Clear board
+	board.clearRect(0, 0, boardData.width, boardData.height);
+
+	// Draw pipes
+	board.fillStyle = boardData.pipes[0].color;
+	boardData.pipes.forEach(pipe => {
+		board.fillRect(pipe.posx, pipe.topPosy, pipe.width, pipe.topHeight);
+		board.fillRect(pipe.posx, pipe.bottomPosy, pipe.width, pipe.bottomHeight);
+	});
+
+	// Draw bird
+	const bird = boardData.bird;
+
+	board.beginPath();
+	board.arc(bird.posx, bird.posy, bird.radius, 0, 2 * Math.PI);
+	board.closePath();
+	board.fillStyle = bird.color;
+	board.fill();
+
+	// Print score
+	boardData.board.fillStyle = "black";
+	boardData.board.fillText("Score: " + score, boardData.width * 0.4, boardData.height * 0.1);
+}
+
+function pipeLoop(boardData) {
+	boardData.pipes.push(new Pipe(boardData.width, boardData.height));
+
+	return setInterval(() => {
+		boardData.pipes.push(new Pipe(boardData.width, boardData.height));
+	}, 1000);
+}
+
+function run(boardData) {
+	playing = true;
+
+	let score = 0;
+	let loops = [];
+
+	loops.push(pipeLoop(boardData));
+	loops.push(setInterval(() => score += 1, 1000));
+
+	loops.push(setInterval(() => {
+		draw(boardData, score);
+
+		if (!boardData.step()) {
+			loops.forEach(loop => clearInterval(loop));
+			playing = false;
+			playAudio(deathAudioFilename);
+		}
+
+		if (boardData.pipes.length != 0 && boardData.pipes[0].shouldRemove) {
+			boardData.pipes.splice(0, 1);
+		}
+	}, 1000 / 60));
+}
+
 function main() {
-	getBoard();
-	setKeyCallbacks();
-	run();
+	const boardData = new BoardData(window.innerWidth, window.innerHeight);
+	setKeyCallbacks(boardData);
+	run(boardData);
 }
 
 $(main);
