@@ -6,8 +6,8 @@ const jumpAudioFilename = "audio/minecraft.mp3";
 const deathAudioFilename = "audio/akasya_duragi.mp3";
 
 function playAudio(filename) {
-	const audio = new Audio(filename);
-	audio.play();
+//	const audio = new Audio(filename);
+//	audio.play();
 }
 
 var playing = true;
