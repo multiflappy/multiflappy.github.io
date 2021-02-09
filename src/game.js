@@ -2,13 +2,12 @@
 
 //const audio = new Audio();
 
-const jumpAudioFilename = "audio/minecraft.mp3";
-const deathAudioFilename = "audio/akasya_duragi.mp3";
+const jumpAudio = new Audio("audio/minecraft.mp3");
+const deathAudio = new Audio("audio/akasya_duragi.mp3");
 
-const audio = new Audio();
-
-function playAudio(filename) {
-	audio.src = filename;
+function playAudio(audio) {
+	//audio.src = filename;
+	audio.currentTime = null;
 	audio.play();
 }
 
@@ -18,7 +17,7 @@ var pressed = false;
 function setKeyCallbacks(boardData) {
 	$(document).bind("keydown", key => {
 		if (playing && !pressed && key.keyCode == 32) {
-			playAudio(jumpAudioFilename);
+			playAudio(jumpAudio);
 			boardData.bird.jump();
 			pressed = true;
 		}
@@ -26,7 +25,7 @@ function setKeyCallbacks(boardData) {
 
 	$(document).bind("touchstart", () => {
 		if (playing && !pressed) {
-			playAudio(jumpAudioFilename);
+			playAudio(jumpAudio);
 			boardData.bird.jump();
 			pressed = true;
 		}
@@ -86,7 +85,7 @@ function run(boardData) {
 		if (!boardData.step()) {
 			loops.forEach(loop => clearInterval(loop));
 			playing = false;
-			playAudio(deathAudioFilename);
+			playAudio(deathAudio);
 		}
 
 		if (boardData.pipes.length != 0 && boardData.pipes[0].shouldRemove) {
