@@ -5,8 +5,10 @@
 const jumpAudioFilename = "audio/minecraft.mp3";
 const deathAudioFilename = "audio/akasya_duragi.mp3";
 
+const audio = new Audio();
+
 function playAudio(filename) {
-	const audio = new Audio(filename);
+	audio.src = filename;
 	audio.play();
 }
 
