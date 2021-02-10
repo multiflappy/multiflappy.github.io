@@ -16,7 +16,7 @@ function playAudio(filename) {
 	new Audio(filename).play();
 }
 
-var playing = true;
+var playing = false;
 var pressed = false;
 
 function setKeyCallbacks(boardData) {
@@ -100,6 +100,15 @@ function run(boardData) {
 			if (!isSafari) {
 				playAudio(deathAudioFilename);
 			}
+
+			setTimeout(() => {
+				boardData.destroyCanvas();
+				$(document).off();
+
+				const singlePlayerButton = $("#singlePlayerButton");
+				singlePlayerButton.html("Play Again");
+				singlePlayerButton.show();
+			}, 1500);			
 		}
 
 		if (boardData.pipes.length != 0 && boardData.pipes[0].shouldRemove) {
@@ -108,6 +117,7 @@ function run(boardData) {
 	}, 1000 / 60));
 }
 
+/*
 function main() {
 	const boardData = new BoardData(window.innerWidth, window.innerHeight);
 	setKeyCallbacks(boardData);
@@ -115,3 +125,12 @@ function main() {
 }
 
 $(main);
+*/
+
+function startSinglePlayer() {
+	$("#singlePlayerButton").hide();
+
+	let boardData = new BoardData(window.innerWidth, window.innerHeight);
+	setKeyCallbacks(boardData);
+	run(boardData);
+}

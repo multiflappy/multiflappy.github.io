@@ -23,6 +23,10 @@ class BoardData {
 		return canvas;
 	}
 
+	destroyCanvas() {
+		this.canvas.remove();
+	}
+
 	shouldStop() {
 		// If out of bounds
 		if (this.bird.posy < this.bird.radius || this.bird.posy > this.height - this.bird.radius) {
