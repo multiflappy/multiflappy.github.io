@@ -1,17 +1,13 @@
 "use strict";
 
-//const isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
-
+// To disable sounds on safari until finding a solution to slow down problem
 var isSafari;
-
 try {
 	var e;
 	var f = e.width;
 } catch(e) {
 	isSafari = e.toString().indexOf("not an object") != -1 ? true : false;
 }
-
-alert(isSafari);
 
 const jumpAudioFilename = "audio/minecraft.mp3";
 const deathAudioFilename = "audio/akasya_duragi.mp3";
