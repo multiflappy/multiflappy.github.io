@@ -1,8 +1,18 @@
 "use strict";
 
-const isSafari = /constructor/i.test(window.HTMLElement)
-	|| (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari']
-	|| (typeof safari !== 'undefined' && window['safari'].pushNotification));
+function compareVersion(version, range) {
+	var string = (range + '');
+	var n = +(string.match(/\d+/) || NaN);
+	var op = string.match(/^[<>]=?|/)[0];
+	return comparator[op] ? comparator[op](version, n) : (version == n || n !== n);
+}
+
+//const isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
+
+var match = navigator.userAgent.match(/version\/(\d+).+?safari/);
+const isSafari = match !== null && compareVersion(match[1], range);
+
+alert(isSafari);
 
 const jumpAudioFilename = "audio/minecraft.mp3";
 const deathAudioFilename = "audio/akasya_duragi.mp3";
