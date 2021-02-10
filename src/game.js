@@ -1,7 +1,8 @@
 "use strict";
 
-const AudioContext = window.AudioContext || window.webkitAudioContext;
-const audioCtx = new AudioContext();
+const isSafari = /constructor/i.test(window.HTMLElement)
+	|| (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari']
+	|| (typeof safari !== 'undefined' && window['safari'].pushNotification));
 
 const jumpAudioFilename = "audio/minecraft.mp3";
 const deathAudioFilename = "audio/akasya_duragi.mp3";
@@ -16,7 +17,10 @@ var pressed = false;
 function setKeyCallbacks(boardData) {
 	$(document).bind("keydown", key => {
 		if (playing && !pressed && key.keyCode == 32) {
-			playAudio(jumpAudioFilename);
+			if (!isSafari) {
+				playAudio(jumpAudioFilename);
+			}
+
 			boardData.bird.jump();
 			pressed = true;
 		}
@@ -24,7 +28,10 @@ function setKeyCallbacks(boardData) {
 
 	$(document).bind("touchstart", () => {
 		if (playing && !pressed) {
-			playAudio(jumpAudioFilename);
+			if (!isSafari) {
+				playAudio(jumpAudioFilename);
+			}
+
 			boardData.bird.jump();
 			pressed = true;
 		}
@@ -84,7 +91,10 @@ function run(boardData) {
 		if (!boardData.step()) {
 			loops.forEach(loop => clearInterval(loop));
 			playing = false;
-			playAudio(deathAudioFilename);
+
+			if (!isSafari) {
+				playAudio(deathAudioFilename);
+			}
 		}
 
 		if (boardData.pipes.length != 0 && boardData.pipes[0].shouldRemove) {
