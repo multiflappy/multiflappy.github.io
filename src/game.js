@@ -2,7 +2,14 @@
 
 //const isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
 
-const isSafari = /apple/i.test(navigator.vendor);
+var isSafari;
+
+try {
+	var e;
+	var f = e.width;
+} catch(e) {
+	isSafari = e.toString().indexOf("not an object") != -1 ? true : false;
+}
 
 alert(isSafari);
 
