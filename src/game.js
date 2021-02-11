@@ -78,10 +78,10 @@ function getRandomHeight(boardHeight, lastHeight = null) {
 	let maxHeight = boardHeight * 0.8;
 
 	if (lastHeight !== null) {
-		if (lastHeight > boardHeight * 0.65) {
-			minHeight = boardHeight * 0.35;
-		} else if (lastHeight < boardHeight * 0.35) {
-			minHeight = boardHeight * 0.65;
+		if (lastHeight > boardHeight * 0.6) {
+			minHeight = boardHeight * 0.4;
+		} else if (lastHeight < boardHeight * 0.4) {
+			minHeight = boardHeight * 0.6;
 		}
 	}
 
@@ -147,7 +147,7 @@ $(main);
 function startSinglePlayer() {
 	$("#singlePlayerButton").hide();
 
-	let boardData = new BoardData(window.innerWidth, window.innerHeight);
+	const boardData = new BoardData(window.innerWidth, window.innerHeight);
 	setKeyCallbacks(boardData);
 	run(boardData);
 }
