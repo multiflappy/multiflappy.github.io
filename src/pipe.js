@@ -1,15 +1,14 @@
 "use strict";
 
 class Pipe {
-	constructor(boardWidth, boardHeight) {
+	constructor(boardWidth, boardHeight, topHeight) {
 		this.posx = boardWidth;
 		this.topPosy = 0;
 
 		this.width = 50;
-		this.topHeight = null;
-		this.setHeight(boardHeight);
+		this.topHeight = topHeight;
 
-		this.gap = boardHeight * 0.3;
+		this.gap = boardHeight * 0.2;
 
 		this.bottomPosy = this.topHeight + this.gap;
 		this.bottomHeight = boardHeight - this.bottomPosy;
@@ -17,20 +16,6 @@ class Pipe {
 		this.color = "green";
 
 		this.shouldRemove = false;
-	}
-
-	setHeight(boardHeight) {
-		let height = Math.floor(boardHeight * Math.random());
-		let minHeight = boardHeight * 0.3;
-		let maxHeight = boardHeight * 0.5;
-
-		if (height < minHeight) {
-			height = minHeight;
-		} else if (height > maxHeight) {
-			height = maxHeight;
-		}
-
-		this.topHeight = height;
 	}
 
 	move() {

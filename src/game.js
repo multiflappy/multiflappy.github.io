@@ -73,11 +73,28 @@ function draw(boardData, score) {
 	boardData.board.fillText("Score: " + score, boardData.width * 0.4, boardData.height * 0.1);
 }
 
+function getRandomHeight(boardHeight, lastHeight = null) {
+	let minHeight = boardHeight * 0.2;
+	let maxHeight = boardHeight * 0.8;
+
+	if (lastHeight !== null) {
+		if (lastHeight > boardHeight * 0.65) {
+			minHeight = boardHeight * 0.35;
+		} else if (lastHeight < boardHeight * 0.35) {
+			minHeight = boardHeight * 0.65;
+		}
+	}
+
+	return minHeight + (maxHeight - minHeight) * Math.random();
+}
+
 function pipeLoop(boardData) {
-	boardData.pipes.push(new Pipe(boardData.width, boardData.height));
+	let topHeight = getRandomHeight(boardData.height);
+	boardData.pipes.push(new Pipe(boardData.width, boardData.height, topHeight));
 
 	return setInterval(() => {
-		boardData.pipes.push(new Pipe(boardData.width, boardData.height));
+		topHeight = getRandomHeight(boardData.height, topHeight);
+		boardData.pipes.push(new Pipe(boardData.width, boardData.height, topHeight));
 	}, 1000);
 }
 
